@@ -38,7 +38,7 @@
                 </a>
             </li>
             <li class="<?php if ($content === 'mahasiswa') echo 'active'; ?>">
-                <a href="#">
+                <a href="<?= base_url('Welcome/show_mahasiswa') ?>">
                     <i class="fa fa-edit"></i>
                     <span>Mahasiswa</span>
                 </a>

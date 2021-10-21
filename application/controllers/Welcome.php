@@ -65,6 +65,20 @@ class Welcome extends CI_Controller
 		else redirect(base_url());
 	}
 
+	public function show_mahasiswa()
+	{
+		$this->load->model('User');
+		$result = $this->User->get_profile_user($this->session->userdata("username"));
+
+		$data = [
+			'content' => 'mahasiswa',
+			'nama' => $result[0]['nama']
+		];
+
+		if ($this->session->userdata(self::SESSION_KEY) === true) $this->load->view('layout', $data);
+		else redirect(base_url());
+	}
+
 	public function logout()
 	{
 		$this->session->sess_destroy();
