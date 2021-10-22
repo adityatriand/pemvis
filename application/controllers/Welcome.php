@@ -44,6 +44,8 @@ class Welcome extends CI_Controller
 
 		$data = [
 			'content' => 'dashboard',
+			'bottom' => 'bottom',
+			'top' => 'top',
 			'nama' => $result[0]['nama']
 		];
 
@@ -58,6 +60,8 @@ class Welcome extends CI_Controller
 
 		$data = [
 			'content' => 'blank_page',
+			'bottom' => 'bottom',
+			'top' => 'top',
 			'nama' => $result[0]['nama']
 		];
 
@@ -72,6 +76,8 @@ class Welcome extends CI_Controller
 
 		$data = [
 			'content' => 'mahasiswa',
+			'bottom' => 'bottom_mahasiswa',
+			'top' => 'top_mahasiswa',
 			'nama' => $result[0]['nama']
 		];
 

@@ -31,11 +31,3 @@
 <script src="<?= base_url('template/') ?>bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url('template/') ?>dist/js/adminlte.min.js"></script>
-<!-- DataTables -->
-<script src="<?= base_url('template/') ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="<?= base_url('template/') ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#table_mhs').DataTable();
-    })
-</script>

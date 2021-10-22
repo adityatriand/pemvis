@@ -15,43 +15,44 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form" method="post">
+                    <form role="form" id="form_mahasiswa">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="nim">NIM</label>
-                                <input type="text" class="form-control" id="nim" name="nim" placeholder="Isikan NIM disini...">
+                                <input type="text" class="form-control" id="nim" name="nim" placeholder="Isikan NIM disini..." required>
+                                <input type="hidden" id="dummy" name="dummy">
                             </div>
                             <div class="form-group">
                                 <label for="nama">NAMA</label>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Isikan nama disini...">
+                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Isikan nama disini..." required>
                             </div>
                             <div class="form-group">
-                                <label for="tanggal_lahir">TANGGAL LAHIR</label>
-                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
+                                <label for="tgl_lahir">TANGGAL LAHIR</label>
+                                <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir" required>
                             </div>
                             <div class="form-group">
                                 <label>JENIS KELAMIN</label>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="gender" value="pria">
+                                        <input type="radio" id="gender1" name="gender" value="pria" required>
                                         Laki-Laki
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="gender" value="wanita">
+                                        <input type="radio" id="gender2" name="gender" value="wanita" required>
                                         Perempuan
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="angkatan">ANGKATAN</label>
-                                <input type="number" class="form-control" id="angkatan" name="angkatan" min=2009 max=<?= date('Y') - 1 ?> step=1 value=2009>
+                                <input type="number" class="form-control" id="angkatan" name="angkatan" min=2009 max=<?= date('Y') - 1 ?> step=1 value=2009 required>
                             </div>
                             <div class="form-group">
                                 <label>PROGRAM STUDI</label>
-                                <select name="prodi" class="form-control">
-                                    <option value="tibil">Teknik Informatika Bilingual</option>
+                                <select id="prodi" name="prodi" class="form-control">
+                                    <option value="tibil" selected='selected'>Teknik Informatika Bilingual</option>
                                     <option value="tireg">Teknik Informatika Reguler</option>
                                     <option value="sibil">Sistem Informasi Bilingual</option>
                                     <option value="sireg">Sistem Informasi Reguler</option>
@@ -63,8 +64,8 @@
                             </div>
                             <div class="form-group">
                                 <label>JURUSAN</label>
-                                <select name="jurusan" class="form-control">
-                                    <option value="TI">Teknik Informatika</option>
+                                <select id="jurusan" name="jurusan" class="form-control">
+                                    <option value="TI" selected='selected'>Teknik Informatika</option>
                                     <option value="SI">Sistem Informasi</option>
                                     <option value="SK">Sistem Komputer</option>
                                     <option value="MA">Manajemen Informatika</option>
@@ -73,15 +74,16 @@
                             </div>
                             <div class="form-group">
                                 <label>FAKULTAS</label>
-                                <select name="fakultas" class="form-control">
-                                    <option value="ilkom">Ilmu Komputer</option>
+                                <select id="fakultas" name="fakultas" class="form-control">
+                                    <option value="ILKOM" selected='selected'>Ilmu Komputer</option>
                                 </select>
                             </div>
                         </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary" id="text-submit">Submit</button>
+                            <button type="button" class="btn btn-success btn-new-insert" id="action_form" style="display: none;">Tambah Baru</button>
                         </div>
                     </form>
                 </div>
@@ -96,12 +98,11 @@
                         <table id="table_mhs" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>No</th>
+                                    <th>NO</th>
                                     <th>NIM</th>
                                     <th>NAMA</th>
-                                    <th>PRODI</th>
                                     <th>JURUSAN</th>
-                                    <th>ANGKATAN</th>
+                                    <th>FAKULTAS</th>
                                     <th>ACTION</th>
                                 </tr>
                             </thead>
@@ -114,3 +115,23 @@
             </div>
     </section>
 </div>
+<div class="modal modal-success fade" id="pesan_status">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="icon fa fa-check" id="icon_status" style="margin-right: 10px;"></i>Alert!</h4>
+            </div>
+            <div class="modal-body">
+                <p id="text_status">...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
