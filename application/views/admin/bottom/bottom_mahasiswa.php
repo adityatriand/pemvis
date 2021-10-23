@@ -152,6 +152,8 @@
                     }
                     renderTable();
                 })
+            } else {
+                modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa batal dihapus');
             }
         })
 
