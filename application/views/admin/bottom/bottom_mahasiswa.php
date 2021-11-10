@@ -37,13 +37,18 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('#table_mhs').DataTable({
-            "columnDefs": [{
+            "columnDefs": [
+                {
                     "class": "text-center",
                     "targets": [0, 3, 4, 5]
                 },
                 {
                     width: "30%",
                     "targets": [1, 2, 5]
+                },
+                { 
+                    orderable: false, 
+                    targets: [0,5] 
                 }
             ]
         });
