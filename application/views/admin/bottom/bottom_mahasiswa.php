@@ -37,7 +37,22 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('#table_mhs').DataTable({
+            "processing": true, //Feature control the processing indicator.
+            "serverSide": true, //Feature control DataTables' server-side processing mode.
+            "order": [], //Initial no order.
+     
+            // Load data for the table's content from an Ajax source
+            "ajax": {
+                "url": "<?php echo site_url('Mahasiswa/datatable_mahasiswa')?>",
+                "type": "POST"
+            },
+     
+            //Set column definition initialisation properties.
             "columnDefs": [
+                { 
+                    "targets": [ 0,5 ], //first column / numbering column
+                    "orderable": false, //set not orderable
+                },
                 {
                     "class": "text-center",
                     "targets": [0, 3, 4, 5]
@@ -46,13 +61,8 @@
                     width: "30%",
                     "targets": [1, 2, 5]
                 },
-                { 
-                    orderable: false, 
-                    targets: [0,5] 
-                }
-            ]
+            ],
         });
-        renderTable();
 
         function renderTable() {
             table.clear();
@@ -155,11 +165,11 @@
                     } else {
                         modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa gagal dihapus');
                     }
-                    renderTable();
                 })
             } else {
                 modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa batal dihapus');
             }
+            renderTable();
         })
 
         table.on('click', '.btn-edit', function() {

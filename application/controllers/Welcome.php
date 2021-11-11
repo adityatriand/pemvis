@@ -15,8 +15,8 @@ class Welcome extends CI_Controller
 	{
 		if ($this->session->has_userdata(self::SESSION_KEY)) redirect(base_url());
 		else {
-			$username = $this->input->post("username");
-			$password = $this->input->post("password");
+			$username = $_POST['username'];
+			$password = $_POST['password'];
 
 			$this->load->model('User');
 

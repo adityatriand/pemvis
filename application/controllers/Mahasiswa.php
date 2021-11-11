@@ -9,6 +9,44 @@ class Mahasiswa extends CI_Controller
         $this->load->model('MahasiswaModel', 'mhs');
     }
 
+        public function index()
+    {
+        $this->load->helper('url');
+    }
+ 
+    public function datatable_mahasiswa()
+    {
+        $list = $this->mhs->get_datatables();
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $mhs) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $mhs->nim;
+            $row[] = $mhs->nama;
+            $row[] = $mhs->jurusan;
+            $row[] = $mhs->fakultas;
+
+            $aksi = "<button type='button' class='btn btn-danger btn-hapus' style='margin-right: 4px;' nim='".$mhs->nim."'>Hapus</button>";
+
+            $aksi .= "<button type='button' class='btn btn-primary btn-edit' nim='".$mhs->nim."'>Edit</button>";
+
+            $row[] = $aksi;
+ 
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->mhs->count_all(),
+                        "recordsFiltered" => $this->mhs->count_filtered(),
+                        "data" => $data,
+                );
+
+        echo json_encode($output);
+    }
+
     public function get_mahasiswa()
     {
         $res = $this->mhs->getAllMahasiswa();
