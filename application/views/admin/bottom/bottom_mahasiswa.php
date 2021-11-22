@@ -34,9 +34,46 @@
 <!-- DataTables -->
 <script src="<?= base_url('template/') ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('template/') ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.colVis.min.js"></script> -->
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.2.0/dist/sweetalert2.all.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('#table_mhs').DataTable({
+            dom: 'Bfrtip',
+            lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            ],
+            buttons: [
+                'pageLength',
+                {
+                    extend: 'excel',
+                    title: 'Data Mahasiswa',
+                    messageTop: 'Berikut data mahasiswa yang ada di fakultas ilmu komputer',
+                    filename: 'Data Mahasiswa Fasilkom',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4 ]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Data Mahasiswa',
+                    messageTop: 'Berikut data mahasiswa yang ada di fakultas ilmu komputer',
+                    filename: 'Data Mahasiswa Fasilkom',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4 ]
+                    }
+                },
+                // 'colvis'
+            ],
             "processing": true, //Feature control the processing indicator.
             "serverSide": true, //Feature control DataTables' server-side processing mode.
             "order": [], //Initial no order.
@@ -109,14 +146,28 @@
             $('#text-submit').html('Submit');
         }
 
-        function modalPesan(type, icon, pesan) {
-            var modal_type = 'modal ' + type + ' fade';
-            var icon_type = 'icon fa ' + icon;
-            $('#pesan_status').attr('class', modal_type);
-            $('#icon_status').attr('class', icon_type);
-            $('#text_status').html(pesan);
-            $('#pesan_status').modal('show');
+        // function modalPesan(type, icon, pesan) {
+        //     var modal_type = 'modal ' + type + ' fade';
+        //     var icon_type = 'icon fa ' + icon;
+        //     $('#pesan_status').attr('class', modal_type);
+        //     $('#icon_status').attr('class', icon_type);
+        //     $('#text_status').html(pesan);
+        //     $('#pesan_status').modal('show');
+        // }
+
+        function modalPesan(icon,title,text)
+        {
+            Swal.fire(title,text,icon)
         }
+
+        $('#prodi').change(function(){
+            var prodi = $(this).val();
+            if(prodi == "tireg" || prodi == "tibil") $("#jurusan").val("TI");
+            else if(prodi == "sireg" || prodi == "sibil") $("#jurusan").val("SI");
+            else if(prodi == "skreg" || prodi == "skbil") $("#jurusan").val("SK");
+            else if(prodi == "ma") $("#jurusan").val("MA");
+            else if(prodi == "ka") $("#jurusan").val("KA");
+        })
 
         $('#form_mahasiswa').submit(function(event) {
             event.preventDefault();
@@ -129,21 +180,21 @@
                 var result = JSON.parse(res);
                 if (result['res'] == 1 || result['res'] == '1') {
                     if (result['dummy']) {
-                        modalPesan('modal-success', 'fa-check', 'Data mahasiswa berhasil diedit');
+                        modalPesan('success', 'Berhasil!', 'Data mahasiswa berhasil diedit');
                     } else {
-                        modalPesan('modal-success', 'fa-check', 'Data mahasiswa berhasil ditambah');
+                        modalPesan('success', 'Berhasil!', 'Data mahasiswa berhasil ditambah');
                     }
 
                 } else if (result['res'] == -1 || result['res'] == "-1") {
-                    modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa gagal ditambah');
+                    modalPesan('error', 'Gagal!', 'Data mahasiswa gagal ditambah');
                 } else if (result['res'] == 0 || result['res'] == "0") {
                     if (result['dummy']) {
-                        modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa gagal diedit');
+                        modalPesan('error', 'Gagal!', 'Data mahasiswa gagal diedit');
                     } else {
-                        modalPesan('modal-warning', 'fa-warning', 'NIM tidak tersedia');
+                        modalPesan('warning', 'Peringatan!', 'NIM tidak tersedia');
                     }
                 } else {
-                    modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa gagal ditambah dengan error' + res);
+                    modalPesan('error', 'Gagal!', 'Data mahasiswa gagal ditambah dengan error' + res);
                 }
                 emptyForm();
                 renderTable();
@@ -152,24 +203,33 @@
 
         table.on('click', '.btn-hapus', function() {
             var nim = $(this).attr('nim');
-            if (confirm("Apakah data mahasiswa benar ingin dihapus ?")) {
-                $.ajax({
-                    method: "POST",
-                    url: "<?= base_url('Mahasiswa/delete_mahasiswa') ?>",
-                    data: {
-                        nim: nim
-                    }
-                }).done(function(res) {
-                    if (res == 1 || res == '1') {
-                        modalPesan('modal-success', 'fa-check', 'Data mahasiswa berhasil dihapus');
-                    } else {
-                        modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa gagal dihapus');
-                    }
+            Swal.fire({
+                  title: "Apakah data mahasiswa berikut benar ingin dihapus ?",
+                  showDenyButton: true,
+                  confirmButtonText: "Hapus",
+                  denyButtonText: 'Tidak',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "<?= base_url('Mahasiswa/delete_mahasiswa') ?>",
+                        data: {
+                            nim: nim
+                        }
+                    }).done(function(res) {
+                        if (res == 1 || res == '1') {
+                            modalPesan('success', 'Berhasil!', 'Data mahasiswa berhasil dihapus');
+                            renderTable();
+                        } else {
+                            modalPesan('error', 'Gagal!', 'Data mahasiswa gagal dihapus');
+                        }
+                    })
+                  } 
+                  else if (result.isDenied) 
+                  {
+                    modalPesan('info', 'Batal!', 'Data mahasiswa batal dihapus');
+                  }
                 })
-            } else {
-                modalPesan('modal-danger', 'fa-ban', 'Data mahasiswa batal dihapus');
-            }
-            renderTable();
         })
 
         table.on('click', '.btn-edit', function() {
